@@ -33,6 +33,27 @@ jobs:
       - name: Install Dependencies
         run: npm install -g calibre
 
+      # - name: Trigger Calibre Test
+      #   env:
+      #     CALIBRE_API_TOKEN: ${{ secrets.CALIBRE_API_TOKEN }}
+      #     CALIBRE_SITE_SLUG: ${{ secrets.CALIBRE_SITE_SLUG }}
+      #   run: |
+      #     calibre site create-pull-request-review \
+      #       --title "Performance Test for PR" \
+      #       --site $CALIBRE_SITE_SLUG \
+      #       --url ${{ github.event.pull_request.html_url }} \
+      #       --branch ${{ github.event.pull_request.head.ref }} \
+      #       --sha ${{ github.sha }} \
+      #       --waitForResult \
+      #       --markdown
+
+      # - name: Trigger Calibre Test
+      #   env:
+      #     CALIBRE_API_TOKEN: ${{ secrets.CALIBRE_API_TOKEN }}
+      #     CALIBRE_SITE_SLUG: ${{ secrets.CALIBRE_SITE_SLUG }}
+      #   run: |
+      #     calibre site create-pull-request-review --title "Performance Test for PR" --site $CALIBRE_SITE_SLUG --url “https://uol-dev.netlify.app” --branch “UNBO-2985-add-calibre-ci-workflows” --sha 123testsha --waitForResult
+
       - name: Trigger Calibre Test
         env:
           CALIBRE_API_TOKEN: ${{ secrets.CALIBRE_API_TOKEN }}
@@ -41,8 +62,7 @@ jobs:
           calibre site create-pull-request-review \
             --title "Performance Test for PR" \
             --site $CALIBRE_SITE_SLUG \
-            --url ${{ github.event.pull_request.html_url }} \
-            --branch ${{ github.event.pull_request.head.ref }} \
-            --sha ${{ github.event.pull_request.head.sha }} \
-            --waitForResult \
-            --markdown
+            --url "https://uol-dev.netlify.app" \
+            --branch "UNBO-2985-add-calibre-ci-workflows" \
+            --sha 123testsha \
+            --waitForResult
