@@ -17,11 +17,11 @@ jobs:
         run: |
           echo "url: ${{ github.event.pull_request.html_url }}"
           echo "branch: ${{ github.event.pull_request.html_url }}"
-          echo "sha: ${{ github.event.pull_request.head.sha" }}"
+          echo "sha: ${{ github.event.pull_request.head.sha }}"
           echo $JSON
-      env:
-        JSON: ${{ toJSON(github) }}
-=
+        env:
+          JSON: ${{ toJSON(github) }}
+
       - name: Checkout Code
         uses: actions/checkout@v2
 
