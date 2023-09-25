@@ -13,27 +13,36 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v2
-
-    - name: Set Up Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: 18
-
-    - name: Install Dependencies
-      run: npm install -g calibre
-
-    - name: Trigger Calibre Test
+      - name: Show inputs
+        run: |
+          echo "url: ${{ github.event.pull_request.html_url }}"
+          echo "branch: ${{ github.event.pull_request.html_url }}"
+          echo "sha: ${{ github.event.pull_request.head.sha" }}"
+          echo $JSON
       env:
-        CALIBRE_API_TOKEN: ${{ secrets.CALIBRE_API_TOKEN }}
-        CALIBRE_SITE_SLUG: ${{ secrets.CALIBRE_SITE_SLUG }}
-      run: |
-        calibre site create-pull-request-review \
-          --title "Performance Test for PR" \
-          --site $CALIBRE_SITE_SLUG \
-          --url ${{ github.event.pull_request.html_url }} \
-          --branch ${{ github.event.pull_request.head.ref }} \
-          --sha ${{ github.event.pull_request.head.sha }} \
-          --waitForResult \
-          --markdown
+        JSON: ${{ toJSON(github) }}
+=
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Set Up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 18
+
+      - name: Install Dependencies
+        run: npm install -g calibre
+
+      - name: Trigger Calibre Test
+        env:
+          CALIBRE_API_TOKEN: ${{ secrets.CALIBRE_API_TOKEN }}
+          CALIBRE_SITE_SLUG: ${{ secrets.CALIBRE_SITE_SLUG }}
+        run: |
+          calibre site create-pull-request-review \
+            --title "Performance Test for PR" \
+            --site $CALIBRE_SITE_SLUG \
+            --url ${{ github.event.pull_request.html_url }} \
+            --branch ${{ github.event.pull_request.head.ref }} \
+            --sha ${{ github.event.pull_request.head.sha }} \
+            --waitForResult \
+            --markdown
