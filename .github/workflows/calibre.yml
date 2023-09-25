@@ -1,6 +1,7 @@
 name: Calibre in pre-production
 
 on:
+  workflow_dispatch:
   pull_request:
     types:
       - opened
