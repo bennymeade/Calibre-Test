@@ -60,9 +60,9 @@ jobs:
           CALIBRE_SITE_SLUG: ${{ secrets.CALIBRE_SITE_SLUG }}
         run: |
           calibre site create-pull-request-review \
-            --title "Performance Test for PR" \
+            --title "CI Calibre test" \
             --site $CALIBRE_SITE_SLUG \
             --url "https://uol-dev.netlify.app" \
-            --branch "UNBO-2985-add-calibre-ci-workflows" \
-            --sha 123testsha \
+            --branch ${{ github.head_ref }} \
+            --sha ${{ github.sha }} \
             --waitForResult
