@@ -19,6 +19,8 @@ jobs:
     steps:
       - name: Show github json
         run: |
+          echo "head_ref: ${{ github.head_ref }}"
+          echo "base_ref: ${{ github.base_ref }}"
           echo $JSON
         env:
           JSON: ${{ toJSON(github) }}
@@ -42,7 +44,7 @@ jobs:
             --title "CI Calibre test" \
             --site "uol-dev-netlify-app" \
             --url "https://uol-dev.netlify.app" \
-            --branch ${{ github.head_ref }} \
+            --branch ${{ github.ref }} \
             --sha ${{ github.sha }} \
             --waitForResult
 
