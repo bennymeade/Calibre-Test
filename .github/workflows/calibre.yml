@@ -1,5 +1,6 @@
+# via CI -> https://calibreapp.com/teams/uol-pre-production/uol-dev-netlify-app-review-site-1040493e-cb92-4a10-8532-12dfe408592f/snapshots
+# via API -> https://calibreapp.com/teams/uol-pre-production/uol-dev-netlify-app-review-site-9b3ff6d5-d115-4750-89dd-0fbfd1c9ea33/snapshots
 name: Calibre in pre-production
-# a little change
 
 on:
   workflow_dispatch:
@@ -13,15 +14,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Show inputs
-        run: |
-          echo "url: ${{ github.event.pull_request.html_url }}"
-          echo "branch: ${{ github.event.pull_request.html_url }}"
-          echo "sha: ${{ github.event.pull_request.head.sha }}"
-          echo $JSON
-        env:
-          JSON: ${{ toJSON(github) }}
-
       - name: Checkout Code
         uses: actions/checkout@v2
 
@@ -33,36 +25,26 @@ jobs:
       - name: Install Dependencies
         run: npm install -g calibre
 
-      # - name: Trigger Calibre Test
-      #   env:
-      #     CALIBRE_API_TOKEN: ${{ secrets.CALIBRE_API_TOKEN }}
-      #     CALIBRE_SITE_SLUG: ${{ secrets.CALIBRE_SITE_SLUG }}
-      #   run: |
-      #     calibre site create-pull-request-review \
-      #       --title "Performance Test for PR" \
-      #       --site $CALIBRE_SITE_SLUG \
-      #       --url ${{ github.event.pull_request.html_url }} \
-      #       --branch ${{ github.event.pull_request.head.ref }} \
-      #       --sha ${{ github.sha }} \
-      #       --waitForResult \
-      #       --markdown
-
-      # - name: Trigger Calibre Test
-      #   env:
-      #     CALIBRE_API_TOKEN: ${{ secrets.CALIBRE_API_TOKEN }}
-      #     CALIBRE_SITE_SLUG: ${{ secrets.CALIBRE_SITE_SLUG }}
-      #   run: |
-      #     calibre site create-pull-request-review --title "Performance Test for PR" --site $CALIBRE_SITE_SLUG --url “https://uol-dev.netlify.app” --branch “UNBO-2985-add-calibre-ci-workflows” --sha 123testsha --waitForResult
-
       - name: Trigger Calibre Test
         env:
           CALIBRE_API_TOKEN: ${{ secrets.CALIBRE_API_TOKEN }}
-          CALIBRE_SITE_SLUG: ${{ secrets.CALIBRE_SITE_SLUG }}
         run: |
           calibre site create-pull-request-review \
             --title "CI Calibre test" \
-            --site $CALIBRE_SITE_SLUG \
+            --site "uol-dev-netlify-app" \
             --url "https://uol-dev.netlify.app" \
             --branch ${{ github.head_ref }} \
             --sha ${{ github.sha }} \
             --waitForResult
+
+      # - name: Post PR comment
+      #   env:
+      #     GH_TOKEN: ${{ github.token }}
+      #   run: |
+      #     gh pr comment "${{ github.ref_name }}" --body "${{ steps.pull_request_review.outputs.PULL_REQUEST_REVIEW_REPORT }}"
+
+      # - name: Post Job summary
+      #   env:
+      #     GH_TOKEN: ${{ github.token }}
+      #   run: |
+      #     echo "${{ steps.pull_request_review.outputs.PULL_REQUEST_REVIEW_REPORT }}" > $GITHUB_STEP_SUMMARY
