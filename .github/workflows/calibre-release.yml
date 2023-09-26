@@ -8,8 +8,7 @@ on:
       - main
 
 jobs:
-  build:
-    name: Notify Calibre
+  calibre_prod_test:
     runs-on: ubuntu-latest
     steps:
       - name: Show github json
@@ -24,8 +23,15 @@ jobs:
       - name: Trigger Calibre Release Test
         env:
           CALIBRE_API_TOKEN: ${{ secrets.CALIBRE_API_TOKEN_UOL_PRODUCTION_TEST }}
+
         run: |
-          calibre site create-pull-request-review --title "CI Calibre release test" --site "unilever-com-8c36e868-f7b7-45e8-9981-8b86c1d65774" --url "https://www.unilever.com" --branch "${{ github.head_ref }}" --sha "${{ github.sha }}" --waitForResult
+          calibre site create-pull-request-review \
+            --title "CI Calibre release test" \
+            --site "unilever-com-8c36e868-f7b7-45e8-9981-8b86c1d65774" \
+            --url "https://www.unilever.com" \
+            --branch "${{ github.head_ref }}" \
+            --sha "${{ github.sha }}" \
+            --waitForResult
 
       - name: Create deploy
         env:
