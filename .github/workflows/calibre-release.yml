@@ -1,4 +1,6 @@
-name: Notify Calibre of production deploy
+name: Calibre in production
+# https://calibreapp.com/docs/integrations/github-actions#example-workflow-notify-calibre-of-a-production-deploy
+# https://calibreapp.com/docs/automation/cli#site-create-pull-request-review-[options]
 
 on:
   push:
@@ -19,11 +21,24 @@ jobs:
       - name: Install Dependencies
         run: npm install -g calibre
 
+      - name: Trigger Calibre Release Test
+        env:
+          CALIBRE_API_TOKEN: ${{ secrets.CALIBRE_API_TOKEN_UOL_PRODUCTION_TEST }}
+
+        run: |
+          calibre site create-pull-request-review \
+            --title "CI Calibre release test" \
+            --site "unilever-com-8c36e868-f7b7-45e8-9981-8b86c1d65774" \
+            --url "https://www.unilever.com" \
+            --branch ${{ github.head_ref }} \
+            --sha ${{ github.sha }} \
+            --waitForResult
+
       - name: Create deploy
         env:
           CALIBRE_API_TOKEN: ${{ secrets.CALIBRE_API_TOKEN }}
         run: |
-          calibre site deploys --site=unilever-com-8c36e868-f7b7-45e8-9981-8b86c1d65774 --repository https://github.com/${{ env.GITHUB_REPOSITORY }}
+          npx calibre site create-deploy --site=unilever-com-8c36e868-f7b7-45e8-9981-8b86c1d65774 --revision=${{ github.sha }} --repository https://github.com/${{ github.repository }}
 
       - name: Get result
         run: echo "${{steps.set-result.outputs.result}}"
