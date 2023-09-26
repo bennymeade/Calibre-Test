@@ -28,11 +28,10 @@ jobs:
       - name: Trigger Calibre Test
         env:
           CALIBRE_API_TOKEN: ${{ secrets.CALIBRE_API_TOKEN }}
-          CALIBRE_SITE_SLUG: ${{ secrets.CALIBRE_SITE_SLUG }}
         run: |
           calibre site create-pull-request-review \
             --title "CI Calibre test" \
-            --site $CALIBRE_SITE_SLUG \
+            --site "uol-dev-netlify-app" \
             --url "https://uol-dev.netlify.app" \
             --branch ${{ github.head_ref }} \
             --sha ${{ github.sha }} \
