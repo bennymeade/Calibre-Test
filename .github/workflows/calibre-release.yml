@@ -38,6 +38,3 @@ jobs:
           CALIBRE_API_TOKEN: ${{ secrets.CALIBRE_API_TOKEN_UOL_PRODUCTION_TEST }}
         run: |
           npx calibre site create-deploy --site=unilever-com-8c36e868-f7b7-45e8-9981-8b86c1d65774 --revision=${{ github.sha }} --repository https://github.com/${{ github.repository }}
-
-      - name: Get result
-        run: echo "${{steps.set-result.outputs.result}}"
