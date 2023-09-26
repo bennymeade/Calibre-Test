@@ -1,0 +1,29 @@
+name: Notify Calibre of production deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Notify Calibre
+    runs-on: ubuntu-latest
+    steps:
+      - name: Show github json
+        run: |
+          echo $JSON
+        env:
+          JSON: ${{ toJSON(github) }}
+
+      - name: Install Dependencies
+        run: npm install -g calibre
+
+      - name: Create deploy
+        env:
+          CALIBRE_API_TOKEN: ${{ secrets.CALIBRE_API_TOKEN }}
+        run: |
+          calibre site deploys --site=unilever-com-8c36e868-f7b7-45e8-9981-8b86c1d65774 --repository https://github.com/${{ env.GITHUB_REPOSITORY }}
+
+      - name: Get result
+        run: echo "${{steps.set-result.outputs.result}}"
